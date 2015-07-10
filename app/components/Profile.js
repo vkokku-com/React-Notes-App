@@ -19,22 +19,29 @@ var Profile = React.createClass({
             repos: []
         }
     },
-    componentDidMount: function () {
-        var self = this;
-        this.ref = new FireBase('https://stones-react-notes.firebaseio.com/');
+
+    init: function () {
+
         var childRef = this.ref.child(this.getParams().username);
         this.bindAsArray(childRef, 'notes');
-
         helpers.getGithubInfo(this.getParams().username)
             .then(function (dataObj) {
-                self.setState({
+                this.setState({
                     bio: dataObj.bio,
                     repos: dataObj.repos
                 });
-            });
+            }.bind(this));
+    },
+    componentDidMount: function () {
+        this.ref = new FireBase('https://stones-react-notes.firebaseio.com/');
+        this.init();
     },
     componentWillUnmount: function () {
         this.unbind('notes');
+    },
+    componentWillReceiveProps(){
+        this.unbind('notes');
+        this.init();
     },
     handleAddNote: function (newNote) {
         this.ref.child(this.getParams().username).set(this.state.notes.concat([newNote]));
