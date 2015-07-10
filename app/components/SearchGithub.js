@@ -24,8 +24,6 @@ var SearchGithub = React.createClass({
             </div>
         );
     }
-
 });
-
 
 module.exports = SearchGithub
